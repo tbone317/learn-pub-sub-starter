@@ -22,7 +22,11 @@ func SubscribeJSON[T any](
 	queueType SimpleQueueType,
 	handler func(T),
 ) error {
-	ch, queue, err := DeclareAndBind(conn, exchange, queueName, key, queueType)
+	ch, queue, err := DeclareAndBind(
+		conn,
+		exchange,
+		queueName,
+		key, queueType)
 	if err != nil {
 		return fmt.Errorf("could not declare and bind queue: %v", err)
 	}
