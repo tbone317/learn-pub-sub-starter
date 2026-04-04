@@ -22,6 +22,8 @@ const (
 	NackRequeue
 )
 
+const deadLetterExchange = "peril_dlx"
+
 func SubscribeJSON[T any](
 	conn *amqp.Connection,
 	exchange,
@@ -96,7 +98,9 @@ func DeclareAndBind(
 		queueType != SimpleQueueDurable, // delete when unused
 		queueType != SimpleQueueDurable, // exclusive
 		false,                           // no-wait
-		nil,                             // args
+		amqp.Table{
+			"x-dead-letter-exchange": deadLetterExchange,
+		}, // args
 	)
 	if err != nil {
 		return nil, amqp.Queue{}, fmt.Errorf("could not declare queue: %v", err)
